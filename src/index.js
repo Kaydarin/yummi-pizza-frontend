@@ -1,12 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import App from './main/App';
+import SidebarMenu from './main/sidebar/SidebarMenu';
+import * as serviceWorker from './main/serviceWorker';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    {/* <App /> */}
+    <SidebarMenu />
   </React.StrictMode>,
   document.getElementById('root')
 );
