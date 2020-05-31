@@ -1,16 +1,26 @@
 import React, { Component, Fragment } from "react";
-import { Card, Icon, Image, Button } from "semantic-ui-react";
+import { Card, Icon, Image, Button, Label } from "semantic-ui-react";
 import "semantic-ui-css/semantic.min.css";
 import "./sidebar-menu.css";
 
 export default function Pizza() {
 	return (
-		<Card>
+		<Card color="brown">
 			<Image src="/images/avatar/large/matthew.png" wrapped ui={false} />
 			<Card.Content>
-				<Card.Header>Pepperoni Pizza</Card.Header>
+				<Card.Header>
+					Pepperoni Pizza
+					<Label
+						attached="top right"
+						active={true}
+						style={{ display: "block" }}
+						color="brown"
+					>
+						x14
+					</Label>
+				</Card.Header>
 				<Card.Meta>
-					<span className="date">A very nice pizza.</span>
+					<span className="date">$99.99</span>
 				</Card.Meta>
 				<Card.Description>Some toppings here.</Card.Description>
 			</Card.Content>

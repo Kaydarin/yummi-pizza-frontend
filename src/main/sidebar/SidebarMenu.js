@@ -9,7 +9,10 @@ import {
 	Grid,
 	Button,
 	Container,
-	Divider
+	Divider,
+	Table,
+	Checkbox,
+	Form
 } from "semantic-ui-react";
 import Pizza from "./Pizza";
 import "semantic-ui-css/semantic.min.css";
@@ -23,47 +26,47 @@ class SidebarMenu extends Component {
 			pizza: [
 				{
 					name: "Pepperoni Pizza",
-					meta: "A very nice pizza.",
+					price: "$99.99",
 					description: "Some nice toppings included."
 				},
 				{
 					name: "Pepperoni Pizza",
-					meta: "A very nice pizza.",
+					price: "$99.99",
 					description: "Some nice toppings included."
 				},
 				{
 					name: "Pepperoni Pizza",
-					meta: "A very nice pizza.",
+					price: "$99.99",
 					description: "Some nice toppings included."
 				},
 				{
 					name: "Pepperoni Pizza",
-					meta: "A very nice pizza.",
+					price: "$99.99",
 					description: "Some nice toppings included."
 				},
 				{
 					name: "Pepperoni Pizza",
-					meta: "A very nice pizza.",
+					price: "$99.99",
 					description: "Some nice toppings included."
 				},
 				{
 					name: "Pepperoni Pizza",
-					meta: "A very nice pizza.",
+					price: "$99.99",
 					description: "Some nice toppings included."
 				},
 				{
 					name: "Pepperoni Pizza",
-					meta: "A very nice pizza.",
+					price: "$99.99",
 					description: "Some nice toppings included."
 				},
 				{
 					name: "Pepperoni Pizza",
-					meta: "A very nice pizza.",
+					price: "$99.99",
 					description: "Some nice toppings included."
 				},
 				{
 					name: "Pepperoni Pizza",
-					meta: "A very nice pizza.",
+					price: "$99.99",
 					description: "Some nice toppings included."
 				}
 			]
@@ -109,6 +112,47 @@ class SidebarMenu extends Component {
 							<div style={{ marginLeft: "" }}>
 								<Header as="h3">Your selected pizzas</Header>
 								<p>None</p>
+								<Table basic="very">
+									<Table.Header>
+										<Table.Row>
+											<Table.HeaderCell>Pizza(s)</Table.HeaderCell>
+											<Table.HeaderCell>Quantity</Table.HeaderCell>
+											<Table.HeaderCell>Price</Table.HeaderCell>
+										</Table.Row>
+									</Table.Header>
+
+									<Table.Body>
+										<Table.Row>
+											<Table.Cell>Pepperoni Pizza</Table.Cell>
+											<Table.Cell>20</Table.Cell>
+											<Table.Cell>$4999.99</Table.Cell>
+										</Table.Row>
+										<Table.Row>
+											<Table.Cell>Pepperoni Pizza</Table.Cell>
+											<Table.Cell>20</Table.Cell>
+											<Table.Cell>$4999.99</Table.Cell>
+										</Table.Row>
+										<Table.Row>
+											<Table.Cell>Pepperoni Pizza</Table.Cell>
+											<Table.Cell>20</Table.Cell>
+											<Table.Cell>$4999.99</Table.Cell>
+										</Table.Row>
+									</Table.Body>
+									<Table.Footer>
+										<Table.Row>
+											<Table.HeaderCell />
+											<Table.HeaderCell>Total</Table.HeaderCell>
+											<Table.HeaderCell>$9999.00</Table.HeaderCell>
+										</Table.Row>
+									</Table.Footer>
+									<Table.Footer>
+										<Table.Row>
+											<Table.HeaderCell />
+											<Table.HeaderCell>Delivery charges</Table.HeaderCell>
+											<Table.HeaderCell>$9999.00</Table.HeaderCell>
+										</Table.Row>
+									</Table.Footer>
+								</Table>
 								<Button
 									content="Next"
 									icon="right arrow"
@@ -124,33 +168,104 @@ class SidebarMenu extends Component {
 		} else if (this.state.step === 1) {
 			return (
 				<Fragment>
-					<Header as="h3">Check your shopping</Header>
-					<Grid container columns={4}>
-						<Grid.Column>
-							<p>pizza 1</p>
-						</Grid.Column>
-						<Grid.Column>
-							<p>pizza 2</p>
-						</Grid.Column>
-						<Grid.Column>
-							<p>pizza 3</p>
-						</Grid.Column>
-						<Grid.Column>
-							<p>pizza 4</p>
-						</Grid.Column>
-						<Grid.Column>
-							<p>pizza 5</p>
-						</Grid.Column>
-						<Grid.Column>
-							<p>pizza 6</p>
-						</Grid.Column>
-						<Grid.Column>
-							<p>pizza 7</p>
-						</Grid.Column>
-						<Grid.Column>
-							<p>pizza 8</p>
-						</Grid.Column>
-					</Grid>
+					<Header as="h3">Confirm your order</Header>
+					<Segment.Group horizontal style={{ width: "89%" }}>
+						<Segment style={{ padding: "2em 3em 2em 3em" }}>
+							<Header as="h4">Insert Info:-</Header>
+							<Form>
+								<Form.Group widths="equal">
+									<Form.Field required={true}>
+										<label>First Name</label>
+										<input placeholder="First Name" />
+									</Form.Field>
+									<Form.Field required={true}>
+										<label>Last Name</label>
+										<input placeholder="Last Name" />
+									</Form.Field>
+								</Form.Group>
+								<Form.Field required={true}>
+									<label>Address Line 1</label>
+									<input placeholder="Address Line 1" />
+								</Form.Field>
+								<Form.Field>
+									<label>Address Line 2</label>
+									<input placeholder="Address Line 2" />
+								</Form.Field>
+								<Form.Group widths="equal">
+									<Form.Field required={true}>
+										<label>Country</label>
+										<input placeholder="Country" />
+									</Form.Field>
+									<Form.Field required={true}>
+										<label>City</label>
+										<input placeholder="City" />
+									</Form.Field>
+									<Form.Field required={true}>
+										<label>Postal Code</label>
+										<input placeholder="Postal Code" />
+									</Form.Field>
+								</Form.Group>
+								<Form.Group widths="equal">
+									<Form.Field required={true}>
+										<label>Phone Number</label>
+										<input placeholder="Phone Number" />
+									</Form.Field>
+									<Form.Field>
+										<label>Other Phone Number</label>
+										<input placeholder="Other Phone Number" />
+									</Form.Field>
+								</Form.Group>
+								<Form.Field required={true}>
+									<Checkbox label="I agree to the Terms and Conditions" />
+								</Form.Field>
+								<Button type="submit">Submit Order</Button>
+							</Form>
+						</Segment>
+						<Segment style={{ padding: "2em 3em 2em 3em" }}>
+							<Header as="h4">Your Order:-</Header>
+							<Table basic="very">
+								<Table.Header>
+									<Table.Row>
+										<Table.HeaderCell>Pizza(s)</Table.HeaderCell>
+										<Table.HeaderCell>Quantity</Table.HeaderCell>
+										<Table.HeaderCell>Price</Table.HeaderCell>
+									</Table.Row>
+								</Table.Header>
+
+								<Table.Body>
+									<Table.Row>
+										<Table.Cell>Pepperoni Pizza</Table.Cell>
+										<Table.Cell>20</Table.Cell>
+										<Table.Cell>$4999.99</Table.Cell>
+									</Table.Row>
+									<Table.Row>
+										<Table.Cell>Pepperoni Pizza</Table.Cell>
+										<Table.Cell>20</Table.Cell>
+										<Table.Cell>$4999.99</Table.Cell>
+									</Table.Row>
+									<Table.Row>
+										<Table.Cell>Pepperoni Pizza</Table.Cell>
+										<Table.Cell>20</Table.Cell>
+										<Table.Cell>$4999.99</Table.Cell>
+									</Table.Row>
+								</Table.Body>
+								<Table.Footer>
+									<Table.Row>
+										<Table.HeaderCell />
+										<Table.HeaderCell>Total</Table.HeaderCell>
+										<Table.HeaderCell>$9999.00</Table.HeaderCell>
+									</Table.Row>
+								</Table.Footer>
+								<Table.Footer>
+									<Table.Row>
+										<Table.HeaderCell />
+										<Table.HeaderCell>Delivery charges</Table.HeaderCell>
+										<Table.HeaderCell>$9999.00</Table.HeaderCell>
+									</Table.Row>
+								</Table.Footer>
+							</Table>
+						</Segment>
+					</Segment.Group>
 				</Fragment>
 			);
 		}
