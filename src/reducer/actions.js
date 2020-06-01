@@ -34,6 +34,12 @@ export const getDeliveryCharge = () => {
 	};
 };
 
+export const getUserInfo = () => {
+	return async (dispatch, getState) => {
+		return getState().stateData.userInfo;
+	};
+};
+
 export const getStateTest = () => {
 	return async (dispatch, getState) => {
 		// dispatch({

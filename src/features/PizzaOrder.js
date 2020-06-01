@@ -13,23 +13,25 @@ import {
 	Table,
 	Checkbox,
 	Form,
-	Modal
+	Modal,
+	Statistic
 } from "semantic-ui-react";
 import Pizza from "./Pizza";
 import { connect } from "react-redux";
-import store from "../../reducer/store";
+import store from "../reducer/store";
 import _ from "lodash";
 import {
 	getStateTest,
 	getPizza,
 	getCurrency,
-	getDeliveryCharge
-} from "../../reducer/actions";
+	getDeliveryCharge,
+	getUserInfo
+} from "../reducer/actions";
 import "semantic-ui-css/semantic.min.css";
-import "./sidebar-menu.css";
 import { round } from "mathjs";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
-class SidebarMenu extends Component {
+class PizzaOrder extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -70,16 +72,38 @@ class SidebarMenu extends Component {
 		const fname = "firstName";
 
 		console.log(user[fname]);
+		/**
+		 * getState() is for getting state data from Redux store
+		 * and here we repopulate it in the localstate,
+		 * if we destroy this component and render it again,
+		 * we able to get full data from the localstate (as we should not, because component was destroyed),
+		 * but not initial data from Redux store.
+		 * Weird...
+		 */
 		const pizzaData = await this.props.dispatch(getPizza());
 		const deliveryCharges = await this.props.dispatch(getDeliveryCharge());
-		const currency = await this.props.dispatch(getCurrency());
-		this.setState({
-			pizza: pizzaData,
-			deliveryCharge: deliveryCharges,
-			currency
-		});
-		console.log(this.state);
-		console.log(this.props);
+		const currencyData = await this.props.dispatch(getCurrency());
+		const userInfoData = await this.props.dispatch(getUserInfo()); // Try to fill the inputs, Go to Orders menu, then go back here. The state exists. Try comment this line and do the same thing. The state gone.
+
+		this.setState(
+			{
+				pizza: pizzaData,
+				deliveryCharge: deliveryCharges,
+				currency: currencyData,
+				userInfo: userInfoData
+			},
+			async () => {
+				const totalCount = _.sumBy(this.state.pizza, function(obj) {
+					return obj.orderCount;
+				});
+
+				if (totalCount > 0) {
+					this.setState({
+						isPizzaSelected: true
+					});
+				}
+			}
+		);
 	}
 
 	pizzaList() {
@@ -342,10 +366,11 @@ class SidebarMenu extends Component {
 				otherPhone: false
 			})
 		) {
-			this.setState({
-				isOpenConfirmModal: true
-			});
-			// this.goToNextStep();
+			// this.setState({
+			// 	isOpenConfirmModal: true
+			// });
+			this.goToNextStep(2);
+			this.clearOrder();
 		}
 	};
 
@@ -454,7 +479,7 @@ class SidebarMenu extends Component {
 											labelPosition="right"
 											floated="right"
 											style={{ marginRight: "5%", width: "80%" }}
-											disabled={this.state.isPizzaSelected ? false : true}
+											disabled={!this.state.isPizzaSelected}
 											onClick={() => this.goToNextStep(1)}
 										/>
 									</Grid.Column>
@@ -656,7 +681,16 @@ class SidebarMenu extends Component {
 										</Modal.Description>
 									</Modal.Content>
 								</Modal>
-								<Button type="submit" onClick={this.handleSubmitOrder}>
+								<Button.Group widths={2}>
+									<Button positive onClick={this.handleSubmitOrder}>
+										Submit Order
+									</Button>
+									<Button.Or />
+									<Button negative onClick={() => this.goToNextStep(0)}>
+										Go Back
+									</Button>
+								</Button.Group>
+								{/* <Button type="submit" onClick={this.handleSubmitOrder}>
 									Submit Order
 								</Button>
 								<Button
@@ -665,7 +699,7 @@ class SidebarMenu extends Component {
 									onClick={() => this.goToNextStep(0)}
 								>
 									Go back
-								</Button>
+								</Button> */}
 							</Form>
 						</Segment>
 						<Segment style={{ padding: "2em 3em 2em 3em" }}>
@@ -730,15 +764,21 @@ class SidebarMenu extends Component {
 					<Segment placeholder style={{ width: "89%" }}>
 						<Header icon>
 							<Icon name="like" />
-							<p>Thank you!</p>
+							<Statistic>
+								<Statistic.Label>Thank you!</Statistic.Label>
+								<p style={{ marginTop: "20px" }}>Your order number is</p>
+								<Statistic.Value>101</Statistic.Value>
+							</Statistic>
 							<p>
 								You can track your order by check on the 'Orders' menu on the
 								left.
 							</p>
 						</Header>
 						<Segment.Inline>
-							<Button primary>Orders</Button>
-							<Button>Main Menu</Button>
+							<Button primary as={Link} to="/orders">
+								Orders
+							</Button>
+							<Button onClick={() => this.goToNextStep(0)}>Main Menu</Button>
 						</Segment.Inline>
 					</Segment>
 				</Fragment>
@@ -764,40 +804,8 @@ class SidebarMenu extends Component {
 	};
 
 	render() {
-		return (
-			<Sidebar.Pushable as={Segment} className="main">
-				<Sidebar
-					as={Menu}
-					animation="push"
-					icon="labeled"
-					inverted
-					vertical
-					visible="visible"
-					width="thin"
-				>
-					<Menu.Item as="a">
-						<Icon name="chart pie" />
-						Pizzas
-					</Menu.Item>
-					<Menu.Item as="a">
-						<Icon name="clipboard list" />
-						Orders
-					</Menu.Item>
-				</Sidebar>
-
-				<Sidebar.Pusher style={{ minHeight: "100vh" }}>
-					<Segment>
-						<Header as="h2">Yummi Pizza</Header>
-					</Segment>
-					<Segment basic>{this.renderStep()}</Segment>
-				</Sidebar.Pusher>
-			</Sidebar.Pushable>
-		);
+		return this.renderStep();
 	}
 }
 
-function mapStateToProps(state) {
-	return state;
-}
-
-export default connect(mapStateToProps)(SidebarMenu);
+export default connect()(PizzaOrder);

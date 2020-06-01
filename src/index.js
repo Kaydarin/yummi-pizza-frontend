@@ -8,6 +8,7 @@ import { initialState } from "./reducer/store";
 import "./index.css";
 import App from "./main/App";
 import SidebarMenu from "./main/sidebar/SidebarMenu";
+import Main from "./main/sidebar/Main";
 import * as serviceWorker from "./main/serviceWorker";
 
 const store = createStore(rootReducer, applyMiddleware(thunk));
@@ -16,7 +17,8 @@ ReactDOM.render(
 	<React.StrictMode>
 		{/* <App /> */}
 		<Provider store={store}>
-			<SidebarMenu />
+			{/* <SidebarMenu /> */}
+			<Main />
 		</Provider>
 	</React.StrictMode>,
 	document.getElementById("root")
