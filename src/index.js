@@ -1,14 +1,23 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
+import { createStore, applyMiddleware } from "redux";
+import thunk from "redux-thunk";
+import rootReducer from "./reducer";
+import { initialState } from "./reducer/store";
 import "./index.css";
 import App from "./main/App";
 import SidebarMenu from "./main/sidebar/SidebarMenu";
 import * as serviceWorker from "./main/serviceWorker";
 
+const store = createStore(rootReducer, applyMiddleware(thunk));
+
 ReactDOM.render(
 	<React.StrictMode>
 		{/* <App /> */}
-		<SidebarMenu />
+		<Provider store={store}>
+			<SidebarMenu />
+		</Provider>
 	</React.StrictMode>,
 	document.getElementById("root")
 );

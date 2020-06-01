@@ -3,33 +3,36 @@ import { Card, Icon, Image, Button, Label } from "semantic-ui-react";
 import "semantic-ui-css/semantic.min.css";
 import "./sidebar-menu.css";
 
-export default function Pizza() {
+export default function Pizza(props) {
 	return (
-		<Card color="brown">
+		<Card color={props.orderCount === 0 ? "" : "brown"}>
 			<Image src="/images/avatar/large/matthew.png" wrapped ui={false} />
 			<Card.Content>
 				<Card.Header>
-					Pepperoni Pizza
+					{props.name}
 					<Label
 						attached="top right"
 						active={true}
-						style={{ display: "block" }}
+						style={{ display: props.orderCount === 0 ? "none" : "block" }}
 						color="brown"
 					>
-						x14
+						x{props.orderCount}
 					</Label>
 				</Card.Header>
 				<Card.Meta>
-					<span className="date">$99.99</span>
+					<span className="date">
+						{props.currency === "USD" ? "$" : "&"}
+						{props.price}
+					</span>
 				</Card.Meta>
-				<Card.Description>Some toppings here.</Card.Description>
+				<Card.Description>{props.description}</Card.Description>
 			</Card.Content>
 			<Card.Content extra>
 				<div className="ui two buttons">
-					<Button basic color="green">
+					<Button basic color="green" onClick={() => props.addOrder(props.id)}>
 						Add
 					</Button>
-					<Button basic color="red">
+					<Button basic color="red" onClick={() => props.removeOrder(props.id)}>
 						Remove
 					</Button>
 				</div>
