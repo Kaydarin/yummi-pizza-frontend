@@ -1,0 +1,7 @@
+.inputText {
+	border-left: none;
+}
+
+.inputText:focus {
+	border-left-color: #85b7d9 !important;
+}
