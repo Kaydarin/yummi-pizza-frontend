@@ -12,7 +12,7 @@ export default {
 		otherPhone: ""
 	},
 	currency: "USD",
-	deliveryCharge: 30.0,
+	deliveryCharge: 15.0,
 	pizza: [
 		{
 			id: 1,
@@ -87,6 +87,7 @@ export default {
 			orderCount: 0
 		}
 	],
+	orderHistory: [],
 	pizzaOrders: [
 		{
 			orderNo: 101,

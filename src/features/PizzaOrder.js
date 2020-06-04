@@ -18,18 +18,19 @@ import {
 } from "semantic-ui-react";
 import Pizza from "./Pizza";
 import { connect } from "react-redux";
-import store from "../reducer/store";
 import _ from "lodash";
 import {
-	getStateTest,
+	requestPizza,
 	getPizza,
 	getCurrency,
 	getDeliveryCharge,
-	getUserInfo
+	getUserInfo,
+	requestOrderPizza
 } from "../reducer/actions";
 import "semantic-ui-css/semantic.min.css";
 import { round } from "mathjs";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import axios from "axios";
 
 class PizzaOrder extends Component {
 	constructor(props) {
@@ -61,17 +62,26 @@ class PizzaOrder extends Component {
 				mainPhone: false,
 				otherPhone: false
 			},
+			isPizzaLoading: false,
 			isPizzaSelected: false,
+			isWaitingSubmission: false,
+			orderNumber: "",
 			isOpenConfirmModal: false
 		};
 	}
 
 	async componentDidMount() {
+		this.clearOrder();
 		const user = this.state.userInfo;
 
 		const fname = "firstName";
 
 		console.log(user[fname]);
+		console.log("posting.....");
+		this.setState({
+			isPizzaLoading: true
+		});
+		await this.props.dispatch(requestPizza());
 		/**
 		 * getState() is for getting state data from Redux store
 		 * and here we repopulate it in the localstate,
@@ -90,11 +100,12 @@ class PizzaOrder extends Component {
 				pizza: pizzaData,
 				deliveryCharge: deliveryCharges,
 				currency: currencyData,
-				userInfo: userInfoData
+				userInfo: userInfoData,
+				isPizzaLoading: false
 			},
 			async () => {
 				const totalCount = _.sumBy(this.state.pizza, function(obj) {
-					return obj.orderCount;
+					return obj.ordercount;
 				});
 
 				if (totalCount > 0) {
@@ -104,6 +115,74 @@ class PizzaOrder extends Component {
 				}
 			}
 		);
+
+		// const testPost = await axios.post(
+		// 	"http://127.0.0.1:8000/api/orderpizza",
+		// 	JSON.stringify({
+		// 		pizza: [
+		// 			{ id: 1, count: 10 },
+		// 			{ id: 2, count: 10 },
+		// 			{ id: 3, count: 10 }
+		// 		],
+		// 		currency: "USD"
+		// 	})
+		// );
+
+		// try {
+		// 	const testPost = await axios({
+		// 		method: "post",
+		// 		// baseURL: "http://127.0.0.1:8000",
+		// 		// url: "/api/orderpizza",
+		// 		url: "http://127.0.0.1:8000/api/orderpizza",
+		// 		// headers: {
+		// 		// 	"Access-Control-Allow-Origin": "*",
+		// 		// 	"Content-Type": "application/json",
+		// 		// 	Accept: "application/json"
+		// 		// },
+		// 		// withCredentials: true,
+		// 		data: {
+		// 			firstName: "Fred",
+		// 			lastName: "Flintstone"
+		// 		}
+		// 	});
+
+		// 	console.log("response");
+		// 	console.log(testPost);
+		// } catch (e) {
+		// 	console.log("error");
+		// 	console.log(e);
+		// }
+
+		// try {
+		// 	const testPost2 = await axios({
+		// 		method: "get",
+		// 		url: "http://127.0.0.1:8000/api/testget"
+		// 	});
+
+		// 	console.log("response");
+		// 	console.log(testPost2);
+		// } catch (e) {
+		// 	console.log("error");
+		// 	console.log(e);
+		// }
+
+		// const testPost3 = await fetch("http://127.0.0.1:8000/api/orderpizza", {
+		// 	method: "post",
+		// 	headers: { "Content-Type": "application/json" },
+		// 	body: {
+		// 		first_name: "someshit"
+		// 	}
+		// })
+		// 	.then(response => response.json())
+		// 	.then(data => {
+		// 		console.log("testPost3");
+		// 		console.log(data);
+		// 		return data;
+		// 	})
+		// 	.catch(error => {
+		// 		console.log("testPost3 error");
+		// 		console.error(error);
+		// 	});
 	}
 
 	pizzaList() {
@@ -122,12 +201,12 @@ class PizzaOrder extends Component {
 
 		_.map(pizzas, function(el) {
 			if (el.id === pizzaId) {
-				_.assign(el, { orderCount: el.orderCount + 1 });
+				_.assign(el, { ordercount: el.ordercount + 1 });
 
 				// if (!_.some(pizzaOrders, { id: pizzaId })) {
 				// 	pizzaOrders.push(el);
 				// } else {
-				// 	_.assign(pizzaOrders, { orderCount: pizzaOrders.orderCount + 1 });
+				// 	_.assign(pizzaOrders, { ordercount: pizzaOrders.ordercount + 1 });
 				// }
 			}
 		});
@@ -146,20 +225,20 @@ class PizzaOrder extends Component {
 
 		_.map(pizzas, function(el) {
 			if (el.id === pizzaId) {
-				if (el.orderCount !== 0) {
-					_.assign(el, { orderCount: el.orderCount - 1 });
+				if (el.ordercount !== 0) {
+					_.assign(el, { ordercount: el.ordercount - 1 });
 					// if (_.some(pizzaOrders, { id: pizzaId })) {
 					// 	const pizzaOrderArrKey = _.findIndex(pizzaOrders, function(obj) {
 					// 		return obj.id === pizzaId;
 					// 	});
-					// 	if (pizzaOrders[pizzaOrderArrKey].orderCount === 1) {
+					// 	if (pizzaOrders[pizzaOrderArrKey].ordercount === 1) {
 					// 		// console.log("1");
 					// 		_.filter(pizzaOrders, function(el) {
 					// 			return el.id !== pizzaId;
 					// 		});
-					// 	} else if (pizzaOrders.orderCount !== 0) {
+					// 	} else if (pizzaOrders.ordercount !== 0) {
 					// 		// console.log("not zero");
-					// 		_.assign(pizzaOrders, { orderCount: pizzaOrders.orderCount - 1 });
+					// 		_.assign(pizzaOrders, { ordercount: pizzaOrders.ordercount - 1 });
 					// 	}
 					// }
 					// console.log(pizzaOrders);
@@ -168,7 +247,7 @@ class PizzaOrder extends Component {
 		});
 
 		const totalCount = _.sumBy(pizzas, function(obj) {
-			return obj.orderCount;
+			return obj.ordercount;
 		});
 		if (totalCount <= 0) {
 			this.setState({
@@ -180,14 +259,14 @@ class PizzaOrder extends Component {
 		// 	if (el.id === pizzaId) {
 		// 		// console.log("pizza order");
 		// 		// console.log(el.id);
-		// 		// console.log(el.orderCount);
-		// 		// if (el.orderCount === 1) {
+		// 		// console.log(el.ordercount);
+		// 		// if (el.ordercount === 1) {
 		// 		// 	_.remove(pizzaOrders, function(obj) {
 		// 		// 		return obj.id === pizzaId;
 		// 		// 	});
 		// 		// }
-		// 		// if (el.orderCount !== 0) {
-		// 		// 	_.assign(el, { orderCount: el.orderCount - 1 });
+		// 		// if (el.ordercount !== 0) {
+		// 		// 	_.assign(el, { ordercount: el.ordercount - 1 });
 		// 		// }
 		// 	}
 		// });
@@ -207,11 +286,11 @@ class PizzaOrder extends Component {
 
 	renderTotalPrice = () => {
 		// const totalPrice = _.sumBy(this.state.pizza, function(obj) {
-		// 	return obj.price * obj.orderCount;
+		// 	return obj.price * obj.ordercount;
 		// });
 
 		const totalPrice = _.sumBy(this.state.pizza, function(obj) {
-			return parseFloat(round(obj.price * obj.orderCount, 2).toFixed(2));
+			return parseFloat(round(obj.price * obj.ordercount, 2).toFixed(2));
 		});
 
 		if (totalPrice > 0) {
@@ -227,7 +306,7 @@ class PizzaOrder extends Component {
 		const pizzas = this.state.pizza;
 
 		_.map(pizzas, function(el) {
-			_.assign(el, { orderCount: 0 });
+			_.assign(el, { ordercount: 0 });
 		});
 
 		this.setState({
@@ -266,7 +345,7 @@ class PizzaOrder extends Component {
 		console.log(event.charCode);
 	};
 
-	handleSubmitOrder = () => {
+	handleSubmitOrder = async () => {
 		const user = this.state.userInfo;
 		const userValidate = this.state.userInfoValidate;
 
@@ -369,8 +448,62 @@ class PizzaOrder extends Component {
 			// this.setState({
 			// 	isOpenConfirmModal: true
 			// });
+
+			const pizzas = this.state.pizza;
+			const newPizzasData = [];
+
+			for (let i = 0; i < pizzas.length; i++) {
+				const thisPizza = _.pick(pizzas[i], ["id", "ordercount"]);
+				const thisNewPizza = _.mapKeys(thisPizza, function(value, key) {
+					if (key === "ordercount") {
+						return "count";
+					}
+					if (key === "id") {
+						return "id";
+					}
+				});
+
+				if (thisNewPizza.count !== 0) {
+					newPizzasData.push(thisNewPizza);
+				}
+			}
+
+			// newPizzasData.splice(-1); // Remove last empty object which Lodash somehow add one during loop
+
+			let order = {
+				user: {
+					firstName: this.state.userInfo.firstName,
+					lastName: this.state.userInfo.lastName,
+					addressLine1: this.state.userInfo.addressLine1,
+					addressLine2:
+						this.state.userInfo.addressLine2 === ""
+							? null
+							: this.state.userInfo.addressLine2,
+					country: this.state.userInfo.country,
+					city: this.state.userInfo.city,
+					poscode: this.state.userInfo.poscode,
+					phoneNo1: this.state.userInfo.mainPhone,
+					phoneNo2:
+						this.state.userInfo.otherPhone === ""
+							? null
+							: this.state.userInfo.otherPhone
+				},
+				pizza: newPizzasData,
+				currency: this.state.currency
+			};
+
+			this.setState({
+				isWaitingSubmission: true
+			});
+
+			const orderNumber = await this.props.dispatch(requestOrderPizza(order));
+
+			this.setState({
+				isWaitingSubmission: false,
+				orderNumber
+			});
+
 			this.goToNextStep(2);
-			this.clearOrder();
 		}
 	};
 
@@ -384,7 +517,16 @@ class PizzaOrder extends Component {
 								<Grid.Row>
 									<Grid.Column width={15}>
 										<Header as="h3">Select your pizzas</Header>
-										<Grid container columns={3}>
+										<Grid
+											container
+											columns={3}
+											as={Segment}
+											basic
+											loading={this.state.isPizzaLoading}
+											style={{
+												minHeight: "80vh"
+											}}
+										>
 											{this.state.pizza.map(pizza => (
 												<Grid.Column>
 													<Pizza
@@ -396,7 +538,7 @@ class PizzaOrder extends Component {
 														img={pizza.img}
 														addOrder={this.addOrder}
 														removeOrder={this.removeOrder}
-														orderCount={pizza.orderCount}
+														orderCount={pizza.ordercount}
 													/>
 												</Grid.Column>
 											))}
@@ -424,16 +566,16 @@ class PizzaOrder extends Component {
 
 									<Table.Body>
 										{this.state.pizza.map(pizza => {
-											if (pizza.orderCount > 0) {
+											if (pizza.ordercount > 0) {
 												return (
 													<Table.Row>
 														<Table.Cell>{pizza.name}</Table.Cell>
-														<Table.Cell>{pizza.orderCount}</Table.Cell>
+														<Table.Cell>{pizza.ordercount}</Table.Cell>
 														<Table.Cell>
 															{this.state.currency === "USD" ? "$" : "&"}
 															{parseFloat(
 																round(
-																	pizza.price * pizza.orderCount,
+																	pizza.price * pizza.ordercount,
 																	2
 																).toFixed(2)
 															)}
@@ -615,16 +757,16 @@ class PizzaOrder extends Component {
 
 												<Table.Body>
 													{this.state.pizza.map(pizza => {
-														if (pizza.orderCount > 0) {
+														if (pizza.ordercount > 0) {
 															return (
 																<Table.Row>
 																	<Table.Cell>{pizza.name}</Table.Cell>
-																	<Table.Cell>{pizza.orderCount}</Table.Cell>
+																	<Table.Cell>{pizza.ordercount}</Table.Cell>
 																	<Table.Cell>
 																		{this.state.currency === "USD" ? "$" : "&"}
 																		{parseFloat(
 																			round(
-																				pizza.price * pizza.orderCount,
+																				pizza.price * pizza.ordercount,
 																				2
 																			).toFixed(2)
 																		)}
@@ -715,15 +857,15 @@ class PizzaOrder extends Component {
 
 								<Table.Body>
 									{this.state.pizza.map(pizza => {
-										if (pizza.orderCount > 0) {
+										if (pizza.ordercount > 0) {
 											return (
 												<Table.Row>
 													<Table.Cell>{pizza.name}</Table.Cell>
-													<Table.Cell>{pizza.orderCount}</Table.Cell>
+													<Table.Cell>{pizza.ordercount}</Table.Cell>
 													<Table.Cell>
 														{this.state.currency === "USD" ? "$" : "&"}
 														{parseFloat(
-															round(pizza.price * pizza.orderCount, 2).toFixed(
+															round(pizza.price * pizza.ordercount, 2).toFixed(
 																2
 															)
 														)}
@@ -767,7 +909,7 @@ class PizzaOrder extends Component {
 							<Statistic>
 								<Statistic.Label>Thank you!</Statistic.Label>
 								<p style={{ marginTop: "20px" }}>Your order number is</p>
-								<Statistic.Value>101</Statistic.Value>
+								<Statistic.Value>{this.state.orderNumber}</Statistic.Value>
 							</Statistic>
 							<p>
 								You can track your order by check on the 'Orders' menu on the
@@ -788,7 +930,7 @@ class PizzaOrder extends Component {
 
 	goToNextStep = step => {
 		const totalPrice = _.sumBy(this.state.pizza, function(obj) {
-			return parseFloat(round(obj.price * obj.orderCount, 2).toFixed(2));
+			return parseFloat(round(obj.price * obj.ordercount, 2).toFixed(2));
 		});
 
 		if (totalPrice > 0) {
@@ -801,10 +943,18 @@ class PizzaOrder extends Component {
 				isPizzaSelected: false
 			}));
 		}
+
+		if (step === 0) {
+			this.clearOrder();
+		}
 	};
 
 	render() {
-		return this.renderStep();
+		return (
+			<Segment basic loading={this.state.isWaitingSubmission}>
+				{this.renderStep()}
+			</Segment>
+		);
 	}
 }
 

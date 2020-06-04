@@ -60,16 +60,14 @@ class Main extends Component {
 						<Segment>
 							<Header as="h2">Yummi Pizza</Header>
 						</Segment>
-						<Segment basic>
-							<Switch>
-								<Route exact path="/">
-									<PizzaOrder />
-								</Route>
-								<Route path="/orders">
-									<SearchOrder />
-								</Route>
-							</Switch>
-						</Segment>
+						<Switch>
+							<Route exact path="/">
+								<PizzaOrder />
+							</Route>
+							<Route path="/orders">
+								<SearchOrder />
+							</Route>
+						</Switch>
 					</Sidebar.Pusher>
 				</Sidebar.Pushable>
 			</BrowserRouter>

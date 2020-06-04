@@ -5,15 +5,20 @@ import "semantic-ui-css/semantic.min.css";
 export default function Pizza(props) {
 	return (
 		<Card color={props.orderCount === 0 ? "" : "brown"}>
-			<Image src="/images/avatar/large/matthew.png" wrapped ui={false} />
+			<Image src={props.img} wrapped ui={false} />
 			<Card.Content>
 				<Card.Header>
 					{props.name}
 					<Label
 						attached="top right"
 						active={true}
-						style={{ display: props.orderCount === 0 ? "none" : "block" }}
-						color="brown"
+						size="large"
+						circular
+						style={{
+							display: props.orderCount === 0 ? "none" : "block",
+							top: "6px",
+							right: "6px"
+						}}
 					>
 						x{props.orderCount}
 					</Label>
