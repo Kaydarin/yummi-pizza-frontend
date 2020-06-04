@@ -5,19 +5,15 @@ import { createStore, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
 import rootReducer from "./reducer";
 import "./index.css";
-import App from "./main/App";
-import SidebarMenu from "./main/sidebar/SidebarMenu";
-import Main from "./main/sidebar/Main";
-import * as serviceWorker from "./main/serviceWorker";
+import App from "./App";
+import * as serviceWorker from "./serviceWorker";
 
 const store = createStore(rootReducer, applyMiddleware(thunk));
 
 ReactDOM.render(
 	<React.StrictMode>
-		{/* <App /> */}
 		<Provider store={store}>
-			{/* <SidebarMenu /> */}
-			<Main />
+			<App />
 		</Provider>
 	</React.StrictMode>,
 	document.getElementById("root")

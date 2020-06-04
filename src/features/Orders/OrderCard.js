@@ -1,9 +1,8 @@
 import React from "react";
 import { Card } from "semantic-ui-react";
 import "semantic-ui-css/semantic.min.css";
-import _ from "lodash";
 
-export default function Order(props) {
+export default function OrderCard(props) {
 	return (
 		<Card fluid href="#card-example-link-card" onClick={props.viewOrder}>
 			<Card.Content header={`Order No.: ${props.id}`} />

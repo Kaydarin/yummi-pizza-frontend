@@ -1,38 +1,13 @@
-import React, { Component, Fragment } from "react";
-import {
-	Header,
-	Icon,
-	Image,
-	Menu,
-	Segment,
-	Sidebar,
-	Grid,
-	Button,
-	Container,
-	Divider,
-	Table,
-	Checkbox,
-	Form,
-	Modal
-} from "semantic-ui-react";
-import Pizza from "./Pizza";
+import React, { Component } from "react";
+import { Header, Icon, Menu, Segment, Sidebar } from "semantic-ui-react";
 import { connect } from "react-redux";
-import store from "../../reducer/store";
-import _ from "lodash";
-import {
-	getStateTest,
-	getPizza,
-	getCurrency,
-	getDeliveryCharge
-} from "../../reducer/actions";
 import "semantic-ui-css/semantic.min.css";
-import "./sidebar-menu.css";
-import { round } from "mathjs";
+import "./app.css";
 import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
-import PizzaOrder from "../../features/PizzaOrder";
-import SearchOrder from "../../features/SearchOrder";
+import Pizzas from "./features/Pizzas/index";
+import Orders from "./features/Orders/index";
 
-class Main extends Component {
+class App extends Component {
 	render() {
 		return (
 			<BrowserRouter>
@@ -62,10 +37,10 @@ class Main extends Component {
 						</Segment>
 						<Switch>
 							<Route exact path="/">
-								<PizzaOrder />
+								<Pizzas />
 							</Route>
 							<Route path="/orders">
-								<SearchOrder />
+								<Orders />
 							</Route>
 						</Switch>
 					</Sidebar.Pusher>
@@ -79,4 +54,4 @@ function mapStateToProps(state) {
 	return state;
 }
 
-export default connect(mapStateToProps)(Main);
+export default connect(mapStateToProps)(App);

@@ -6,23 +6,21 @@ import {
 	Select,
 	Button,
 	Segment,
-	Table,
 	Container,
 	Icon,
-	Divider,
-	Label
+	Divider
 } from "semantic-ui-react";
 import "semantic-ui-css/semantic.min.css";
 import "./search-order.css";
 import { connect } from "react-redux";
-import { requestOrderHistory, getOrderHistory } from "../reducer/actions";
+import { requestOrderHistory, getOrderHistory } from "../../reducer/actions";
 import _ from "lodash";
 import { round } from "mathjs";
-import Order from "./Order";
+import OrderCard from "./OrderCard";
 import OrderDetail from "./OrderDetail";
-import CartTable from "./CartTable";
+import CartTable from "../../components/CartTable";
 
-class SearchOrder extends Component {
+class Orders extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -34,10 +32,6 @@ class SearchOrder extends Component {
 			searchValue: "",
 			allPizzaOrders: [],
 			selectedOrderPizzas: [],
-			// selectedCurrency: "",
-			// selectedDeliveryCharge: "",
-			// selectedOrderNo: "",
-			// selectedOrderStatus: "",
 			selectedOrder: {
 				selectedOrderNo: "",
 				selectedOrderStatus: "",
@@ -54,6 +48,7 @@ class SearchOrder extends Component {
 			isSearching: false
 		};
 	}
+
 	renderLoop = () => {
 		const tags = [];
 
@@ -133,7 +128,7 @@ class SearchOrder extends Component {
 			);
 		} else {
 			return this.state.allPizzaOrders.map(order => (
-				<Order
+				<OrderCard
 					id={order.id}
 					currency={order.currency}
 					totalAmount={this.renderTotalAmount(order.pizza)}
@@ -190,16 +185,6 @@ class SearchOrder extends Component {
 		});
 	};
 
-	renderTotalPrice = (price, ordercount) => {
-		const totalPrice = round(price * ordercount, 2).toFixed(2);
-
-		if (totalPrice > 0) {
-			return totalPrice;
-		} else {
-			return 0;
-		}
-	};
-
 	renderOrderDetail = () => {
 		if (_.isEmpty(this.state.selectedOrderPizzas)) {
 			return (
@@ -234,48 +219,13 @@ class SearchOrder extends Component {
 						otherPhone={this.state.selectedOrder.otherPhone}
 					/>
 					<Segment basic>
-						<Table basic="very">
-							<Table.Header>
-								<Table.Row>
-									<Table.HeaderCell>Pizza(s)</Table.HeaderCell>
-									<Table.HeaderCell>Quantity</Table.HeaderCell>
-									<Table.HeaderCell>Price</Table.HeaderCell>
-								</Table.Row>
-							</Table.Header>
-
-							<Table.Body>
-								{this.state.selectedOrderPizzas.map(pizza => (
-									<Table.Row>
-										<Table.Cell>{pizza.name}</Table.Cell>
-										<Table.Cell>{pizza.pizzacount}</Table.Cell>
-										<Table.Cell>
-											{pizza.currency === "USD" ? "$" : "&"}
-											{this.renderTotalPrice(pizza.price, pizza.pizzacount)}
-										</Table.Cell>
-									</Table.Row>
-								))}
-							</Table.Body>
-							<Table.Footer>
-								<Table.Row>
-									<Table.HeaderCell />
-									<Table.HeaderCell>Total</Table.HeaderCell>
-									<Table.HeaderCell>
-										{this.state.selectedOrder.currency === "USD" ? "$" : "&"}
-										{this.state.selectedOrder.pizzaTotalPrice}
-									</Table.HeaderCell>
-								</Table.Row>
-							</Table.Footer>
-							<Table.Footer>
-								<Table.Row>
-									<Table.HeaderCell />
-									<Table.HeaderCell>Delivery charges</Table.HeaderCell>
-									<Table.HeaderCell>
-										{this.state.selectedOrder.currency === "USD" ? "$" : "&"}
-										{this.state.selectedOrder.deliveryCharge}
-									</Table.HeaderCell>
-								</Table.Row>
-							</Table.Footer>
-						</Table>
+						<CartTable
+							pizzas={this.state.selectedOrderPizzas}
+							currency={this.state.selectedOrder.currency}
+							isPizzaPriceCalculateIndividually={true}
+							totalPrice={this.state.selectedOrder.pizzaTotalPrice}
+							deliveryCharge={this.state.selectedOrder.deliveryCharge}
+						/>
 						<Divider style={{ marginBottom: "10px" }} />
 					</Segment>
 				</Fragment>
@@ -340,4 +290,4 @@ class SearchOrder extends Component {
 	}
 }
 
-export default connect()(SearchOrder);
+export default connect()(Orders);

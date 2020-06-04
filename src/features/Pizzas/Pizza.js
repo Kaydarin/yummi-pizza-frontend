@@ -1,5 +1,5 @@
-import React, { Component, Fragment } from "react";
-import { Card, Icon, Image, Button, Label } from "semantic-ui-react";
+import React from "react";
+import { Card, Image, Button, Label } from "semantic-ui-react";
 import "semantic-ui-css/semantic.min.css";
 
 export default function Pizza(props) {
