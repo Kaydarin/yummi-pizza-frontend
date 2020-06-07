@@ -1,25 +1,7 @@
 import axios from "axios";
 
-export const activateGeod = geod => ({
-	type: "ACTIVATE_GEOD",
-	geod
-});
-
-export const closeGeod = () => ({
-	type: "CLOSE_GEOD"
-});
-
-// export const getStateTest = () => ({
-// 	type: "GET_STATE_TEST"
-// });
-
 export const getPizza = () => {
 	return async (dispatch, getState) => {
-		// dispatch({
-		//   type: "GET_STATE_TEST"
-		// });
-		// console.log("state is");
-		console.log(getState());
 		return getState().stateData.pizza;
 	};
 };
@@ -44,9 +26,6 @@ export const getUserInfo = () => {
 
 export const getStateTest = () => {
 	return async (dispatch, getState) => {
-		// dispatch({
-		//   type: "GET_STATE_TEST"
-		// });
 		return getState().geod;
 	};
 };
@@ -92,7 +71,9 @@ export const requestOrderHistory = payload => {
 				"http://127.0.0.1:8000/api/order",
 				payload
 			);
+
 			const data = response.data;
+
 			dispatch({
 				type: "SET_ORDER_HISTORY",
 				data
