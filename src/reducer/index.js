@@ -3,18 +3,14 @@ import initialState from "./store";
 
 const globalState = (state = initialState, action) => {
 	switch (action.type) {
-		case "ACTIVATE_GEOD":
-			return action.geod;
-		case "CLOSE_GEOD":
-			return {};
 		case "SET_PIZZA":
 			return {
-				...initialState,
+				...state,
 				pizza: action.data
 			};
 		case "SET_ORDER_HISTORY":
 			return {
-				...initialState,
+				...state,
 				orderHistory: action.data
 			};
 		default:
